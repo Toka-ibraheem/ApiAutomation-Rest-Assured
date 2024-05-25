@@ -55,6 +55,21 @@ public class APITest {
         extent.attachReporter(sparkReporter); // Attach ExtentSparkReporter to ExtentReports
     }
 
+ // Method to get the last user ID
+    private int getLastUserId() {
+        // Assuming the last page has the highest user ID
+        Response response = RestAssured.get("https://reqres.in/api/users?page=2"); // Adjust endpoint as needed
+        int totalPages = response.jsonPath().getInt("total_pages");
+        
+        // Get the last user from the last page
+        Response lastPageResponse = RestAssured.get("https://reqres.in/api/users?page=" + totalPages);
+        int lastUserId = lastPageResponse.jsonPath().getInt("data[-1].id"); // Get ID of the last user
+        return lastUserId;
+    }
+
+
+
+    
     // DataProvider for testing endpoints.
     @DataProvider(name = "userEndpoints")
     public Object[][] userEndpoints() {
@@ -164,12 +179,20 @@ public class APITest {
         if (response.getStatusCode() == expectedStatusCode) {
             test.pass("Status code is " + expectedStatusCode);
 
-            // If the status code is 201 (Created), verify the new user ID
+            // If the status code is 201 (Created)
             if (expectedStatusCode == 201) {
-                // Extract the ID from the response body
+             /*   // Extract the ID from the response body
                 int userId = response.jsonPath().getInt("id");
                 int expectedUserId = userId + 1; // Expected user ID is the returned ID incremented by 1
-                Assert.assertEquals(userId, expectedUserId, "New user ID is not incremented by 1");
+                Assert.assertEquals(userId, expectedUserId, "New user ID is not incremented by 1");*/
+
+
+         // For successful creation (status code 201), verify that the response body contains valid data
+            Assert.assertTrue(response.getBody().asString().contains("id"));
+           Assert.assertTrue(response.getBody().asString().contains("createdAt"));
+           test.pass("Status code is " + expectedStatusCode + " and response contains valid data for user creation");
+
+                
             }
         } else {
             test.fail("Expected status code " + expectedStatusCode + " but got " + response.getStatusCode());
