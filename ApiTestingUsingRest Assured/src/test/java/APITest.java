@@ -56,15 +56,15 @@ public class APITest {
     }
 
  // Method to get the last user ID
-    private int getLastUserId() {
+    //private int getLastUserId() {
         // Assuming the last page has the highest user ID
-        Response response = RestAssured.get("https://reqres.in/api/users?page=2"); // Adjust endpoint as needed
-        int totalPages = response.jsonPath().getInt("total_pages");
+    //    Response response = RestAssured.get("https://reqres.in/api/users?page=2"); // Adjust endpoint as needed
+      //  int totalPages = response.jsonPath().getInt("total_pages");
         
         // Get the last user from the last page
-        Response lastPageResponse = RestAssured.get("https://reqres.in/api/users?page=" + totalPages);
-        int lastUserId = lastPageResponse.jsonPath().getInt("data[-1].id"); // Get ID of the last user
-        return lastUserId;
+        //Response lastPageResponse = RestAssured.get("https://reqres.in/api/users?page=" + totalPages);
+        //int lastUserId = lastPageResponse.jsonPath().getInt("data[-1].id"); // Get ID of the last user
+        //return lastUserId;
     }
 
 
@@ -242,7 +242,9 @@ public class APITest {
     public Object[][] patchUserData() {
         return new Object[][] {
             { "1", "{ \"first_name\": \"neo\" }", 200 }, // Successful patch
-            { "3", "{ \"last_name\": \"smith\" }", 400 } // Missing required field
+           // { "3", "{ \"last_name\": \"smith\" }", 400 } // Missing required field
+            { "11", "{ \"first_name\": \"John\" }", 404 } // Non-existent user
+
                    };
     }
 
